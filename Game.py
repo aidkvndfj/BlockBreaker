@@ -10,9 +10,13 @@
 import pygame
 import random
 import sys
+import easygui as gui
+
+# Custom Py Files
 sys.path.insert(0, 'Classes')
 from PaddleClass import *
 from BallClass import *
+from BlockClass import *
 
 # Constants
 WIDTH = 960 # Width of screen
@@ -24,6 +28,8 @@ BACKGROUND = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 # Global Variables
+global score
+score = 0
 
 # Other Variables
 SpacePressed = False
@@ -39,27 +45,35 @@ pygame.display.set_caption("Breakout Remake") # Name the window 'PySnake'
 # Clock Setup For FPS
 clock = pygame.time.Clock()
 
-# Font/Text Setup
+# Font Setup
+textFont = pygame.font.SysFont("Roboto", 40)
 scoreFont = pygame.font.SysFont("Halvetica", 20)
+
+# Create Text
 scoreText = scoreFont.render("Score: {0}".format(0), False, (WHITE))
+helpText = textFont.render("Press Space To Lanch".format(0), False, (WHITE))
 
 #~~~~~~~ Sprites Init ~~~~~~~#
 # Sprite Groups
 allSprites = pygame.sprite.Group()
+allBlocks = pygame.sprite.Group()
 
 # Sprites
 paddle = Paddle(WIDTH, HEIGHT)
 ball = Ball(WIDTH, HEIGHT)
+block = Block(WIDTH, HEIGHT)
 
 allSprites.add(paddle, ball)
+allBlocks.add(block)
 
 #~~~~~~~~ Functions ~~~~~~~~~#
 
 #~~~~~~ Main Game Loop ~~~~~~#
+gui.msgbox("Welcome to breakout for PC", "Breakout", "Play")
 running = True
 while (running):
-    # print(spawnFood)
     clock.tick(FPS) # Set the Frames Per
+    screen.fill(BACKGROUND) # Gets rid of everything on the screen
 
     # Checks for ball, if not game over
     if (ball.alive == False):
@@ -68,6 +82,7 @@ while (running):
     # If space not pressed follow paddle
     if (SpacePressed == False):
         ball.FollowPaddle(paddle.rect.centerx, paddle.rect.y)
+        screen.blit(helpText, (WIDTH / 2 - (helpText.get_rect().width / 2), HEIGHT / 2))
 
     # Sprite Collisions
     if (pygame.sprite.collide_rect(paddle, ball)):
@@ -87,8 +102,8 @@ while (running):
     allSprites.update()
 
     # Draw Frame
-    screen.fill(BACKGROUND) # Gets rid of everything on the screen
     allSprites.draw(screen) # Draws the head
+    allBlocks.draw(screen)
 
     # Show Frame
     pygame.display.flip() # Flips the display to show new frame
@@ -96,3 +111,5 @@ while (running):
 # Quit out of pygame
 pygame.quit()
 pygame.font.quit()
+
+gui.msgbox("Game Over\nScore: {}".format(score), "Breakout")
