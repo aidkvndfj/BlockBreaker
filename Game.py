@@ -26,6 +26,7 @@ WHITE = (255, 255, 255)
 # Global Variables
 
 # Other Variables
+SpacePressed = False
 
 # Initalize Pygame
 pygame.init()
@@ -33,7 +34,7 @@ pygame.font.init()
 
 # Screen Setup
 screen = pygame.display.set_mode((WIDTH, HEIGHT)) # Create a screen that is WIDTH wide and HEIGHT tall
-pygame.display.set_caption("Game Name") # Name the window 'PySnake'
+pygame.display.set_caption("Breakout Remake") # Name the window 'PySnake'
 
 # Clock Setup For FPS
 clock = pygame.time.Clock()
@@ -64,10 +65,23 @@ while (running):
     if (ball.alive == False):
         running = False
 
+    # If space not pressed follow paddle
+    if (SpacePressed == False):
+        ball.FollowPaddle(paddle.rect.centerx, paddle.rect.y)
+
+    # Sprite Collisions
+    if (pygame.sprite.collide_rect(paddle, ball)):
+        hitLocation = ball.rect.centerx - paddle.rect.x
+        ball.HitPaddle(hitLocation, paddle.rect.width)
+
     # Check events whenever some input is given
     for event in pygame.event.get():
         if (event.type == pygame.QUIT): # If the 'X' in the corner is clicked exit
             running = False
+        if (event.type == pygame.KEYDOWN):
+            key = pygame.key.get_pressed()
+            if (key[pygame.K_SPACE]):
+                SpacePressed = True
 
     # Updates the head
     allSprites.update()
