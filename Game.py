@@ -50,8 +50,8 @@ textFont = pygame.font.SysFont("Roboto", 40)
 scoreFont = pygame.font.SysFont("Halvetica", 20)
 
 # Create Text
-scoreText = scoreFont.render("Score: {0}".format(0), False, (WHITE))
-helpText = textFont.render("Press Space To Lanch".format(0), False, (WHITE))
+scoreText = scoreFont.render("Score: {0}".format(0), True, (WHITE))
+helpText = textFont.render("Press Space To Lanch".format(0), True, (WHITE))
 
 #~~~~~~~ Sprites Init ~~~~~~~#
 # Sprite Groups
