@@ -61,3 +61,6 @@ class Ball(pygame.sprite.Sprite):
     def FollowPaddle(self, paddleX, paddleY):
         self.rect.centerx = paddleX
         self.rect.centery = paddleY
+
+    def bottomBounce(self):
+        self.speed.y = abs(self.speed.y)

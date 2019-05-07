@@ -33,7 +33,26 @@ score = 0
 
 # Other Variables
 SpacePressed = False
-
+level = '''
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBB
+'''
 # Initalize Pygame
 pygame.init()
 pygame.font.init()
@@ -61,10 +80,13 @@ allBlocks = pygame.sprite.Group()
 # Sprites
 paddle = Paddle(WIDTH, HEIGHT)
 ball = Ball(WIDTH, HEIGHT)
-block = Block(WIDTH, HEIGHT)
+
+for i in range(len(level) / 19):
+    for j in range(19):
+        b = Block(WIDTH, HEIGHT, (j * 50 + 6), (i * 17 + 5), level[i * 12 + j])
+        allBlocks.add(b)
 
 allSprites.add(paddle, ball)
-allBlocks.add(block)
 
 #~~~~~~~~ Functions ~~~~~~~~~#
 
@@ -82,9 +104,15 @@ while (running):
     # If space not pressed follow paddle
     if (SpacePressed == False):
         ball.FollowPaddle(paddle.rect.centerx, paddle.rect.y)
-        screen.blit(helpText, (WIDTH / 2 - (helpText.get_rect().width / 2), HEIGHT / 2))
+        screen.blit(helpText, (WIDTH / 2 - (helpText.get_rect().width / 2), HEIGHT * 0.75))
 
     # Sprite Collisions
+    spriteHit = pygame.sprite.spritecollideany(ball, allBlocks, False)
+    if (spriteHit != None):
+        if (ball.rect.y > spriteHit.rect.y):
+            spriteHit.kill()
+            ball.bottomBounce()
+
     if (pygame.sprite.collide_rect(paddle, ball)):
         hitLocation = ball.rect.centerx - paddle.rect.x
         ball.HitPaddle(hitLocation, paddle.rect.width)
